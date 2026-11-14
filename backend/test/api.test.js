@@ -6,7 +6,7 @@ const port = 5123;
 const base = `http://127.0.0.1:${port}/api`;
 const server = spawn(process.execPath, ["server.js"], {
   cwd: process.cwd(),
-  env: { ...process.env, PORT: String(port), NODE_ENV: "test" },
+  env: { ...process.env, PORT: String(port), NODE_ENV: "development" },
   stdio: ["ignore", "pipe", "pipe"]
 });
 
