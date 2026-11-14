@@ -197,6 +197,22 @@ app.post("/api/boards", auth, (req, res) => {
   res.status(201).json(board);
 });
 
+app.patch("/api/boards/:id", auth, (req, res) => {
+  const data = db();
+  const board = data.boards.find(b => b.id === req.params.id);
+
+  if (!board) return res.status(404).json({ message: "Board not found" });
+  if (!canAccessBoard(board, req.user)) return res.status(403).json({ message: "You do not have access to this board" });
+  if (req.body.name !== undefined && !String(req.body.name).trim()) {
+    return res.status(400).json({ message: "Board name is required" });
+  }
+
+  board.name = req.body.name !== undefined ? String(req.body.name).trim() : board.name;
+  board.description = req.body.description !== undefined ? String(req.body.description).trim() : board.description;
+  save(data);
+  res.json(board);
+});
+
 app.get("/api/boards/:id", auth, (req, res) => {
   const data = db();
   const board = data.boards.find(b => b.id === req.params.id);
